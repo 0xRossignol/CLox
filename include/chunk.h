@@ -4,27 +4,25 @@
 #include "common.h"
 #include "value.h"
 
-typedef enum
-{
-    OP_CONSTANT,
+typedef enum {
+  OP_CONSTANT,
 
-    OP_ADD,
-    OP_SUBTRACT,
-    OP_MULTIPLY,
-    OP_DIVIDE,
-    // 取反
-    OP_NEGATE,
+  OP_ADD,
+  OP_SUBTRACT,
+  OP_MULTIPLY,
+  OP_DIVIDE,
+  // 取反
+  OP_NEGATE,
 
-    OP_RETURN,
+  OP_RETURN,
 } OpCode;
 
-typedef struct
-{
-    int count;
-    int capacity;
-    uint8_t *code;
-    int *lines;
-    ValueArray constants;
+typedef struct {
+  int count;
+  int capacity;
+  uint8_t *code;
+  int *lines;
+  ValueArray constants;
 } Chunk;
 
 void initChunk(Chunk *chunk);
