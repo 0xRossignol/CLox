@@ -18,10 +18,8 @@ void initScanner(const char *source) {
   scanner.line = 1;
 }
 
-static Token identifier() {
-  while (isAlpha(peek()) || isDigit(peek()))
-    advance;
-  return makeToken(identifierType());
+static bool isAlpha(char c) {
+  return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 }
 
 static bool isDigit(char c) { return c >= '0' && c <= '9'; }
@@ -87,14 +85,14 @@ static void skipWhitespace() {
     case '/':
       if (peekNext() == '/') {
         while (peek() != '\n' && !isAtEnd())
-          advance;
+          advance();
       } else {
         return;
       }
       break;
 
     default:
-      break;
+      return;
     }
   }
 }
@@ -165,9 +163,15 @@ static TokenType identifierType() {
   return TOKEN_IDENTIFIER;
 }
 
+static Token identifier() {
+  while (isAlpha(peek()) || isDigit(peek()))
+    advance();
+  return makeToken(identifierType());
+}
+
 static Token number() {
   while (isDigit(peek()))
-    advance;
+    advance();
 
   if (peek() == '.' && isDigit(peekNext())) {
     advance();
@@ -208,42 +212,29 @@ Token scanToken() {
   if (isDigit(c))
     return number();
 
+  // clang-format off
   switch (c) {
   // 单字符符号
-  case '(':
-    return makeToken(TOKEN_LEFT_PAREN);
-  case ')':
-    return makeToken(TOKEN_RIGHT_PAREN);
-  case '{':
-    return makeToken(TOKEN_LEFT_BRACE);
-  case '}':
-    return makeToken(TOKEN_RIGHT_BRACE);
-  case ';':
-    return makeToken(TOKEN_SEMICOLON);
-  case ',':
-    return makeToken(TOKEN_COMMA);
-  case '.':
-    return makeToken(TOKEN_DOT);
-  case '-':
-    return makeToken(TOKEN_MINUS);
-  case '+':
-    return makeToken(TOKEN_PLUS);
-  case '/':
-    return makeToken(TOKEN_SLASH);
-  case '*':
-    return makeToken(TOKEN_STAR);
+  case '(':   return makeToken(TOKEN_LEFT_PAREN);
+  case ')':   return makeToken(TOKEN_RIGHT_PAREN);
+  case '{':   return makeToken(TOKEN_LEFT_BRACE);
+  case '}':   return makeToken(TOKEN_RIGHT_BRACE);
+  case ';':   return makeToken(TOKEN_SEMICOLON);
+  case ',':   return makeToken(TOKEN_COMMA);
+  case '.':   return makeToken(TOKEN_DOT);
+  case '-':   return makeToken(TOKEN_MINUS);
+  case '+':   return makeToken(TOKEN_PLUS);
+  case '/':   return makeToken(TOKEN_SLASH);
+  case '*':   return makeToken(TOKEN_STAR);
   // 组合符号
-  case '!':
-    return makeToken(match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
-  case '=':
-    return makeToken(match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
-  case '<':
-    return makeToken(match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
-  case '>':
-    return makeToken(match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
+  case '!':   return makeToken(match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
+  case '=':   return makeToken(match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
+  case '<':   return makeToken(match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
+  case '>':   return makeToken(match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
   // 字符串
-  case '"':
-    return string();
+  case '"':   return string();
   }
-  return errorToken("Unexcepted character.");
+  // clang-format off
+
+  return errorToken("Unexpected character.");
 }

@@ -82,7 +82,7 @@ static void advance() {
   }
 }
 
-static void consum(TokenType type, const char *message) {
+static void consume(TokenType type, const char *message) {
   if (parser.current.type == type) {
     advance();
     return;
@@ -132,7 +132,7 @@ static void parsePrecedence(Precedence precedence);
 
 static void grouping() {
   expression();
-  consum(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
+  consume(TOKEN_RIGHT_PAREN, "Expect ')' after expression.");
 }
 
 static void number() {
