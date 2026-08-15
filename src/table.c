@@ -34,7 +34,7 @@ static Entry *findEntry(Entry *entries, int capacity, ObjString *key) {
       }
 
     } else if (entry->key == key) {
-      return true;
+      return entry;
     }
 
     index = (index + 1) % capacity;

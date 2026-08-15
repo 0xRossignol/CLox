@@ -7,8 +7,6 @@
 #include "debug.h"
 #include "vm.h"
 
-#define DEBUG_PRINT_CODE
-
 static void repl() {
   char line[1024];
   for (;;) {
