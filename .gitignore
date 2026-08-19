@@ -6,6 +6,9 @@
 build/
 bin/
 
+# 测试
+test/
+
 # C/C++ object files
 *.o
 *.obj
